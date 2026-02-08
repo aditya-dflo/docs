@@ -1,0 +1,56 @@
+---
+title: 'Security Guidelines'
+description: 'Follow these security best practices to protect your Dialflo integration, systems, and user data when deploying AI-powered voice workflows.'
+---
+
+## API Key Management
+
+* **Secure storage**: Never expose API keys in client-side code, public repositories, or browser-accessible files.
+* **Environment variables**: Store API keys in environment variables or secure configuration systems on the server.
+* **Access control**: Restrict API key usage to only trusted services and team members.
+* **Key rotation**: Rotate API keys periodically and immediately if a compromise is suspected.
+* **Usage monitoring**: Monitor API usage patterns to detect unexpected spikes or abnormal behavior.
+
+---
+
+## Data Protection
+
+* **Minimize data collection**: Collect and transmit only the data required for the voice interaction to function.
+* **Secure transmission**: Always use HTTPS for all API requests and webhook communications.
+* **Data retention**: Define and enforce clear retention policies for call data, recordings, and transcripts.
+* **User consent**: Inform users when calls may be recorded or analyzed and obtain appropriate consent.
+* **PII handling**: Handle personally identifiable information with care and limit access to authorized systems only.
+
+---
+
+## Web Integration Security
+
+* **Content Security Policy**: Configure CSP rules to allow only required scripts, media, and network connections.
+* **Domain configuration**: Ensure that only authorized domains are used for embedding Web Call experiences.
+* **XSS protection**: Sanitize and validate all dynamic inputs to prevent cross-site scripting attacks.
+* **Iframe safeguards**: If embedding via iframe, apply appropriate sandbox and permission attributes.
+* **CORS configuration**: Limit cross-origin requests to only trusted origins.
+
+---
+
+## Authentication and Access Control
+
+* **Least privilege principle**: Grant only the minimum access required for users and systems.
+* **Regular access reviews**: Periodically audit who has access to Dialflo-related credentials and systems.
+* **Strong credentials**: Use strong, unique passwords for all accounts interacting with Dialflo services.
+* **Session management**: Implement appropriate session timeouts and token invalidation mechanisms.
+
+---
+
+## Compliance and Transparency
+
+* **Privacy regulations**: Ensure your implementation complies with applicable data protection laws and regulations.
+* **User disclosure**: Clearly inform users that they are interacting with an AI-powered voice assistant.
+* **Opt-out options**: Provide users with a clear way to opt out of AI-driven calls or interactions where applicable.
+* **Internal documentation**: Maintain documentation of your security controls and operational practices.
+
+---
+
+## Need Help?
+
+For security-related questions or to report a vulnerability, contact our security team at: **security@dialflo.ai**

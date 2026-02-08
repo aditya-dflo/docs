@@ -1,80 +1,127 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Make your first AI-powered voice call with Dialflo in minutes.
+---
+
+Get up and running with **Dialflo** quickly.  
+This guide walks you through authenticating, configuring an agent, making your first outbound call, and retrieving call insights.
+
 ---
 
 ## Get started in three steps
 
-Get your documentation site running locally and make your first customization.
+You’ll:
 
-### Step 1: Set up your local environment
+0. Get your Dialflo API Token and authenticate your requests
+1. Authenticate using your Dialflo API token  
+2. Configure an AI agent (one-time setup)  
+3. Make your first call and retrieve insights  
+
+---
+
+### Step 0: Get your Dialflo API token
+
+All Dialflo API requests are authenticated using an API token issued by Dialflo to your organization.
+
+Contact us to get the API token for your Voice calling needs - abhishek@dialflo.ai
 
 <AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
+  <Accordion icon="key" title="How authentication works">
+    Each Dialflo customer (organization) is issued an API token during onboarding.
+    This token authorizes all API requests made on behalf of your organization.
   </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
+
+  <Accordion icon="code" title="Authentication headers">
+    Include the following headers with every request:
+
+    ```json
+    {
+      "auth_token": "Bearer <YOUR_DIALFLO_API_TOKEN>",
+      "Content-Type": "application/json"
+    }
+    ```
+
+    <Tip>
+      Store your API token securely (for example, as an environment variable).
+    </Tip>
   </Accordion>
 </AccordionGroup>
 
-### Step 2: Deploy your changes
+---
+
+### Step 1: Launch your AI agent (one-time setup)
+
+Before making calls, you need to configure an **AI agent**.
+
+An agent represents the voice identity and phone number used to place outbound calls.
+
+Contact us to get the perfect agent ready for your needs - abhishek@dialflo.ai
 
 <AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+  <Accordion icon="user-gear" title="Create or configure an agent">
+    Agent configuration is a one-time setup and is currently done through the
+    Dialflo dashboard or during onboarding with the Dialflo team.
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+    Once configured, you will receive:
+    - An agent phone number **or**
+    - An agent name
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
+    You’ll use one of these values when initiating calls.
   </Accordion>
 </AccordionGroup>
 
-### Step 3: Go live
+---
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+### Step 2: Make your first AI-powered call
+
+Use the `/make_call` endpoint to initiate an outbound call with personalized context.
+
+```bash
+curl https://api.dialflo.ai/make_call \
+  -H "auth_token: Bearer <YOUR_DIALFLO_API_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "from_agent_name": "YOUR_AGENT_NAME",
+    "to_phone_number": "<CUSTOMER_PHONE_NUMBER>",
+    "extra_config": {
+      "call_context": {
+        "USER_NAME": "Ankita",
+        "JOB_TYPE": "PICKER",
+        "CITY_TYPE": "DELHI"
+      }
+    }
+  }'
+  ```
+  <Tip>
+  Store the <code>task_id</code> returned from the <code>/make_call</code> request — it is required to retrieve call insights later.
+</Tip>
+
+---
+
+### Step 3: Retrieve call details and insights
+
+Once the call is completed, Dialflo generates structured insights and metadata for the conversation.
+
+Use the `task_id` returned in Step 2 to fetch call details.
+
+```bash
+curl https://api.dialflo.ai/call_details/<TASK_ID> \
+  -H "auth_token: Bearer <YOUR_DIALFLO_API_TOKEN>"
+```
+
+**Response includes:**
+* Call status (completed / failed)
+* Duration and timestamps
+* Conversation insights and extracted variables
+* Recording and transcript references (if enabled)
+
+---
 
 ## Next steps
 
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+Now that you've made your first call, explore:
+- Advanced agent configuration options
+- Webhook integrations for real-time call events
+- Bulk calling capabilities
+- Custom conversation flows and context variables
+  
