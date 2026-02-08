@@ -1,0 +1,72 @@
+---
+title: 'Webhooks'
+description: 'Receive real-time call data when calls complete'
+---
+
+## Overview
+
+Dialflo can send call data to your server endpoint automatically when a call completes.
+
+---
+
+## Webhook Payload
+
+```json
+{
+  "call_id": "81386e80-afd5-41ee-b654-bbc5a502127e",
+  "agent_id": 14,
+  "agent_name": "ONEST_HINDI_CANDIDATE",
+  "call_insights": {
+    "metadata": {
+      "name": "Amitabh",
+      "father_name": "Sanjay",
+      "institute_name": "ITI Lucknow",
+      "trade": "Electronic",
+      "gender": "Male",
+      "preferred_job_location": "Pune",
+      "hometown_and_locality": "Lucknow",
+      "expected_monthly_salary": "20000",
+      "languages_spoken": "Hindi, English",
+      "dob": "02-01-1995",
+      "training_duration": "2 years",
+      "state_registration_number": null,
+      "user_consent": "Yes"
+    },
+    "user_interest": {
+      "status": "Yes",
+      "confidence_score": 95,
+      "reasoning": "The candidate is actively job-seeking and has specified a preferred location and salary."
+    },
+    "next_action": "REDIAL/CUSTOM_DEFINED"
+  },
+  "call_recording_url": "https://media.plivo.com/v1/Account/.../Recording/...mp3",
+  "from_number": "918035736948",
+  "to_number": "918529801859",
+  "call_status": "ANSWERED",
+  "call_duration": 91,
+  "answer_time": "2025-06-25 10:57:05+05:30",
+  "end_time": "2025-06-25 10:58:36+05:30",
+  "call_direction": "outbound",
+  "call_triggered": true,
+  "call_quality": {
+    "user_engagement": {
+      "value": 9,
+      "reason": "The user actively responded to all questions and provided detailed information.",
+      "confidence_score": 95
+    },
+    "user_satisfaction": {
+      "value": 9,
+      "reason": "The user was cooperative and compliant, indicating high satisfaction.",
+      "confidence_score": 95
+    }
+  }
+}
+```
+
+---
+
+## Setup
+
+To configure webhooks, contact us with your server endpoint URL:
+
+📧 **abhishek@dialflo.ai**

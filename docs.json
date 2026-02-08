@@ -7,8 +7,7 @@
     "light": "#07C983",
     "dark": "#15803D"
   },
-  "favicon": "/navbar_logo.jpg",
-
+  "favicon": "logo/logo.png",
   "navigation": {
     "tabs": [
       {
@@ -45,37 +44,33 @@
             ]
           },
           {
-            "group": "Authentication",
+            "group": "Customization",
             "pages": [
-              "api-reference/authentication"
+              "api-reference/customization"
             ]
           },
           {
-            "group": "Voice & Calls",
+            "group": "Webhooks",
             "pages": [
-              "api-reference/calls",
-              "api-reference/webhooks"
+              "api-reference/webhook"
             ]
           }
         ]
       }
     ]
   },
-
   "logo": {
     "light": "/logo/navbar_logo.jpg",
     "dark": "/logo/dialflo_logo.png"
   },
-
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:support@dialflo.com"
+        "label": "Talk to our Founder",
+        "href": "mailto:abhishek@dialflo.ai"
       }
     ]
   },
-
   "footer": {
     "socials": {
       "x": "https://x.com/dialflo",
@@ -83,7 +78,3 @@
     }
   }
 }
-
-
-
-  

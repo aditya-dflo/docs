@@ -1,33 +1,116 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: API Overview
+description: Overview of Dialflo APIs for initiating and managing AI-powered calls
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+Dialflo APIs allow you to programmatically initiate AI-powered voice calls and retrieve structured insights after a call is completed.
 
-## Welcome
+With these APIs, you can:
+- Initiate outbound calls with personalized context
+- Retrieve post-call conversation insights
+- Receive call data in real time via webhooks
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+---
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+## Base URL
+
+All API requests are made to:
+
+```
+https://api.dialflo.ai
+```
+
+---
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API requests require authentication using your organization's API token.
+
+Include the following headers with every request:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
+{
+  "auth_token": "Bearer <YOUR_DIALFLO_API_TOKEN>",
+  "Content-Type": "application/json"
+}
+```
+
+---
+
+## Available Endpoints
+---
+
+### Get Call Details
+`GET /call_details/<TASK_ID>`
+
+Retrieves structured insights and metadata for a completed call.
+
+#### Request
+
+```bash
+curl --location 'https://api.dialflo.ai/call_details/<task_id>' \
+--header 'auth_token: Bearer <YOUR_DIALFLO_API_TOKEN>'
+```
+
+#### Response
+
+The response includes comprehensive call data and AI-generated insights:
+
+```json
+[
+    {
+        "agent_name": "ONEST",
+        "call_context": {},
+        "call_insights": {
+            "metadata": {
+                "degree": "No",
+                "call_time": "20th March 10 AM",
+                "current_job": "",
+                "current_city": ""
+            },
+            "user_interest": {
+                "status": "Unclear",
+                "confidence_score": 0.0,
+                "reasoning": "The user did not provide a clear response to any of the questions."
+            },
+            "next_action": {
+                "value": "REDIAL",
+                "reason": "Candidate did not engage in the discussion."
+            }
+        },
+        "call_recording_url": "https://media.plivo.com/v1/Account/MAZTM5OTQ0YZG5YJAYNT/Recording/ffd20998-3f37-4ddb-9341-0a1c9061b36c.mp3",
+        "from_number": "918035736461",
+        "to_number": "917407656243",
+        "call_status": "ANSWERED",
+        "call_duration": 23.0
+    }
 ]
 ```
+
+#### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `agent_name` | string | Name of the AI agent that made the call |
+| `call_context` | object | Custom context variables passed during call initiation |
+| `call_insights` | object | AI-generated insights from the conversation |
+| `call_insights.metadata` | object | Extracted data points from the conversation |
+| `call_insights.user_interest` | object | User's interest level with confidence score and reasoning |
+| `call_insights.next_action` | object | Recommended next action with explanation |
+| `call_recording_url` | string | URL to access the call recording |
+| `from_number` | string | Phone number the call was made from |
+| `to_number` | string | Phone number the call was made to |
+| `call_status` | string | Status of the call (e.g., ANSWERED, NO_ANSWER, BUSY) |
+| `call_duration` | number | Duration of the call in seconds |
+
+---
+
+## Rate Limits
+
+Rate limits apply to all API endpoints. Contact your account manager for details specific to your plan.
+
+---
+
+## Support
+
+For API support or questions, contact: **abhishek@dialflo.ai**

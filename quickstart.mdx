@@ -12,14 +12,14 @@ This guide walks you through authenticating, configuring an agent, making your f
 
 You’ll:
 
-0. Get your Dialflo API Token and authenticate your requests
-1. Authenticate using your Dialflo API token  
-2. Configure an AI agent (one-time setup)  
-3. Make your first call and retrieve insights  
+1. Get your Dialflo API Token and authenticate your requests
+2. Authenticate using your Dialflo API token  
+3. Configure an AI agent (one-time setup)  
+4. Make your first call and retrieve insights  
 
 ---
 
-### Step 0: Get your Dialflo API token
+### Step 1: Get your Dialflo API token
 
 All Dialflo API requests are authenticated using an API token issued by Dialflo to your organization.
 
@@ -49,7 +49,7 @@ Contact us to get the API token for your Voice calling needs - abhishek@dialflo.
 
 ---
 
-### Step 1: Launch your AI agent (one-time setup)
+### Step 2: Launch your AI agent (one-time setup)
 
 Before making calls, you need to configure an **AI agent**.
 
@@ -66,13 +66,39 @@ Contact us to get the perfect agent ready for your needs - abhishek@dialflo.ai
     - An agent phone number **or**
     - An agent name
 
-    You’ll use one of these values when initiating calls.
+    You'll use one of these values when initiating calls.
+
+    **API endpoint to create an agent:**
+```bash
+    curl --location --globoff '{{ENV_URL}}/agents/' \
+      --header 'auth_token: Bearer {{AUTH_TOKEN}}' \
+      --header 'Content-Type: application/json' \
+      --data '{
+        "prompt": {
+          "default": "<ENTER_YOUR_AGENT_PROMPT>"
+        },
+        "agent_name": "<NAME_YOUR_AGENT>",
+        "agent_phone_number": "ENTER_PROVIDED_AGENT_NUMBER",
+        "voice_id": "ENTER_DESIRED_VOICE_OF_THE",
+        "version": 1,
+        "welcome_text": {
+          "default": "ENTER_GREETING_MESSAGE"
+        },
+        "tools": null,
+        "enabled": true,
+        "save_stats": true,
+        "server_type": "DEV",
+        "call_type": "SELECT_CALL_TYPE",
+        "created_at": "<>",
+        "updated_at": "<>"
+      }'
+```
   </Accordion>
 </AccordionGroup>
 
 ---
 
-### Step 2: Make your first AI-powered call
+### Step 3: Make your first AI-powered call
 
 Use the `/make_call` endpoint to initiate an outbound call with personalized context.
 
@@ -98,10 +124,10 @@ curl https://api.dialflo.ai/make_call \
 
 ---
 
-### Step 3: Retrieve call details and insights
+### Step 4: Retrieve call details and insights
 
 Once the call is completed, Dialflo generates structured insights and metadata for the conversation.
-
+2025-01-04T15
 Use the `task_id` returned in Step 2 to fetch call details.
 
 ```bash
@@ -120,8 +146,8 @@ curl https://api.dialflo.ai/call_details/<TASK_ID> \
 ## Next steps
 
 Now that you've made your first call, explore:
-- Advanced agent configuration options
+- Check out the best practices to cater to your voice powered agentic needs
 - Webhook integrations for real-time call events
 - Bulk calling capabilities
-- Custom conversation flows and context variables
+- Custom workflows and insight extractions
   
