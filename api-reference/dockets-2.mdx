@@ -1,0 +1,159 @@
+---
+title: "Dockets V2"
+description: "Dockets are defined as business tasks. One docket can have multiple type of communications which is needed to complete a business task."
+icon: "rectangle-api"
+---
+
+When you trigger the below endpoint, it creates a docket.
+
+### **API Endpoint:**
+
+```markdown
+POST https://api.dialflo.ai/api/v2/dockets
+```
+
+### **Headers:**
+
+```markdown
+auth_token: Bearer <auth_token>
+Content-Type: application/json
+```
+
+### **Request Payload:**
+
+```json
+{
+  
+	"agent_id": 280,
+	"to_phone_number": "917504429196", // 12 Digit Phone Number with Country Code
+    "external_id": "12345", // internal CRM id
+     "extra_config": {
+     	"call_context": { // context or attributes for the AI agent to use 
+	      "crm_id": "12345",         // internal CRM id
+	      "name": "",
+	      "email": "",          // if email is present
+		}
+    }
+}
+```
+
+### **Response Payload:**
+
+Success Response
+
+Status: 200 with body
+
+```json
+{
+  "docket_id": "3f2b9c1a-7d4e-4a10-9b2c-8e5f1a6d4c22",
+  "status": "OPEN",
+  "created": true
+}
+```
+
+The docket uuid is unique identifier for this docket which can be used to get status of this and associated calls with this docket.
+
+### Webhook Delivery -
+
+On Completion of docket ( i.e no more further calls to be made), we will send docket details to the webhook.
+
+Important Fields -
+
+```markdown
+docket_id → can be use to map to original docket created
+
+call_insights.call_disposition → final outcome of calls made in the docket
+
+call_insights.call_metadata → extracted call details map based on the agent (if configured).
+
+call_context → contains the context variables sent originally.
+
+attempts → contains the details of call attempts made in this docket.
+
+dashboard_url → url of last answered call if any (can be null if no calls were answered)
+
+**Note: call_insights would be null if user did not pick call in any call attempt.**
+```
+
+### Retry
+
+> We recommend to track status code of APIs at your end as well and to have a exponential backoff based retry for 5xx statuses so that any brief downtime does not affect the API.
+
+## **Fetch Docket Details**
+
+This can be used to fetch the current state of docket using the docket ID.
+
+status: COMPLETED → the docket is completed
+
+status: IN\_PROGRESS → the docket is still pending to be completed.
+
+```markdown
+GET https://api.dialflo.ai/api/v1/dockets/{docket_id}
+```
+
+Sample Curl -
+
+```shellscript
+curl 'https://api.dialflo.ai/api/v1/dockets/{docket_id}' \
+--header 'Accept: application/json' \
+--header 'auth_token: Bearer <auth_token>' \
+--header 'Content-Type: application/json'
+```
+
+Sample response -
+
+```json
+ {
+    "docket_id": "81664fe3-cabf-4720-8cda-8a3a1a1d6a46",
+    "agent_name": "Wroots Outgoing",
+    "status": "COMPLETED",
+    "call_type": "DIALFLO_INTERNAL_TEST",
+    "from_number": "918071583200",
+    "to_phone_number": "917504429196",
+    "call_context": {
+    		"crm_id": "xxxx",
+			"name": "",
+			"email": "",          // if email is present
+    },
+    "external_id": "crm_id",
+    "closed_call_id": "f632b050-4f3a-47d0-a914-04e73a98b8d1",
+    "latest_call_id": "f632b050-4f3a-47d0-a914-04e73a98b8d1",
+    "closure_reason": "DISPOSITION",
+    "outbound_call_count": 1,
+    "notification_status": "SKIPPED",
+    "first_called_at": "2026-08-11T12:31:17.889766",
+    "closed_at": "2026-08-11T12:32:33.333911",
+    "created_at": "2026-08-11T12:31:14.989407",
+    "updated_at": "2026-08-11T12:32:33.351692"
+}
+```
+
+## **Fetch Agents**
+
+### **API Endpoint:**
+
+```markdown
+GET https://api.dialflo.ai/api/v1/agents?organizationId={your_organization_id}
+```
+
+### **Headers:**
+
+```markdown
+auth_token: Bearer <auth_token>
+Content-Type: application/json
+```
+
+### **Response Payload:**
+
+Success Response
+
+Status: 200 with body
+
+```json
+[
+  {"agent_id": 1, "agent_name": "Test_INCOMING"},
+  {"agent_id": 2, "agent_name": "Test_OUTGOING"},
+  {"agent_id": 3, "agent_name": "TEST AGENT_INCOMING"},
+  {"agent_id": 4, "agent_name": "TEST AGENT_OUTGOING"}
+]
+```
