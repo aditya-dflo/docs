@@ -1,0 +1,35 @@
+---
+title: "Agents"
+description: "Agents handle the workflows of each business task. It is responsible to get outcome of a given task."
+icon: "rectangle-api"
+---
+
+## **Fetch Agents**
+
+### **API Endpoint:**
+
+```markdown
+GET https://api.dialflo.ai/api/v1/agents?organizationId={your_organization_id}
+```
+
+### **Headers:**
+
+```markdown
+auth_token: Bearer <auth_token>
+Content-Type: application/json
+```
+
+### **Response Payload:**
+
+Success Response
+
+Status: 200 with body
+
+```json
+[
+  {"agent_id": 1, "agent_name": "Test_INCOMING"},
+  {"agent_id": 2, "agent_name": "Test_OUTGOING"},
+  {"agent_id": 3, "agent_name": "TEST AGENT_INCOMING"},
+  {"agent_id": 4, "agent_name": "TEST AGENT_OUTGOING"}
+]
+```

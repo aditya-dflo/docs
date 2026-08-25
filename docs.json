@@ -42,7 +42,8 @@
             "pages": [
               "api-reference/introduction",
               "api-reference/dockets",
-              "api-reference/dockets-v2"
+              "api-reference/dockets-v2",
+              "api-reference/agents"
             ]
           },
           {
