@@ -1,11 +1,12 @@
 ---
-title: API Overview
-description: Overview of Dialflo APIs for initiating and managing AI-powered calls
+title: "API Overview"
+description: "Overview of Dialflo APIs for initiating and managing AI-powered calls"
 ---
 
 Dialflo APIs allow you to programmatically initiate AI-powered voice calls and retrieve structured insights after a call is completed.
 
 With these APIs, you can:
+
 - Initiate outbound calls with personalized context
 - Retrieve post-call conversation insights
 - Receive call data in real time via webhooks
@@ -16,7 +17,7 @@ With these APIs, you can:
 
 All API requests are made to:
 
-```
+```text
 https://api.dialflo.ai
 ```
 
@@ -38,9 +39,11 @@ Include the following headers with every request:
 ---
 
 ## Available Endpoints
+
 ---
 
 ### Get Call Details
+
 `GET /call_details/<TASK_ID>`
 
 Retrieves structured insights and metadata for a completed call.
@@ -90,7 +93,7 @@ The response includes comprehensive call data and AI-generated insights:
 #### Response Fields
 
 | Field | Type | Description |
-|-------|------|-------------|
+| --- | --- | --- |
 | `agent_name` | string | Name of the AI agent that made the call |
 | `call_context` | object | Custom context variables passed during call initiation |
 | `call_insights` | object | AI-generated insights from the conversation |
@@ -100,7 +103,7 @@ The response includes comprehensive call data and AI-generated insights:
 | `call_recording_url` | string | URL to access the call recording |
 | `from_number` | string | Phone number the call was made from |
 | `to_number` | string | Phone number the call was made to |
-| `call_status` | string | Status of the call (e.g., ANSWERED, NO_ANSWER, BUSY) |
+| `call_status` | string | Status of the call (e.g., ANSWERED, NO\_ANSWER, BUSY) |
 | `call_duration` | number | Duration of the call in seconds |
 
 ---
@@ -113,4 +116,4 @@ Rate limits apply to all API endpoints. Contact your account manager for details
 
 ## Support
 
-For API support or questions, contact: **abhishek@dialflo.ai**
+For API support or questions, contact: [**saswat@dialflo.ai**](mailto:saswat@dialflo.ai)
