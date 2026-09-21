@@ -7,20 +7,18 @@ sidebarTitle: "Dockets V2"
 
 When you trigger the below endpoint, it creates a docket.
 
-### **API Endpoint:**
+### **Create Docket**
+
+Creates a docket record in the DB only; does not place a call
 
 ```markdown
-POST https://api.dialflo.ai/api/v2/dockets[]
+POST https://api.dialflo.ai/api/v2/dockets
 ```
-
-### **Headers:**
 
 ```markdown
 auth_token: Bearer <auth_token>
 Content-Type: application/json
 ```
-
-### **Request Payload:**
 
 ```json
 {
@@ -38,7 +36,7 @@ Content-Type: application/json
 }
 ```
 
-### **Response Payload:**
+### **Response:**
 
 Success Response
 
@@ -54,7 +52,7 @@ Status: 200 with body
 
 The docket uuid is unique identifier for this docket which can be used to get status of this and associated calls with this docket.
 
-### Webhook Delivery -
+### Webhook Delivery
 
 On Completion of docket ( i.e no more further calls to be made), we will send docket details to the webhook.
 
@@ -92,8 +90,6 @@ status: IN\_PROGRESS → the docket is still pending to be completed.
 GET https://api.dialflo.ai/api/v1/dockets/{docket_id}
 ```
 
-Sample Curl -
-
 ```shellscript
 curl 'https://api.dialflo.ai/api/v1/dockets/{docket_id}' \
 --header 'Accept: application/json' \
@@ -129,32 +125,166 @@ Sample response -
 }
 ```
 
-## **Fetch Agents**
+## **Trigger Call for a docket**
 
-### **API Endpoint:**
+ Triggers the outbound call for an already-created docket. 
 
 ```markdown
-GET https://api.dialflo.ai/api/v1/agents?organizationId={your_organization_id}
+POST /api/v2/dockets/{docket_id}/trigger
 ```
-
-### **Headers:**
 
 ```markdown
 auth_token: Bearer <auth_token>
 Content-Type: application/json
 ```
 
-### **Response Payload:**
-
-Success Response
+Response
 
 Status: 200 with body
 
 ```json
-[
-  {"agent_id": 1, "agent_name": "Test_INCOMING"},
-  {"agent_id": 2, "agent_name": "Test_OUTGOING"},
-  {"agent_id": 3, "agent_name": "TEST AGENT_INCOMING"},
-  {"agent_id": 4, "agent_name": "TEST AGENT_OUTGOING"}
-]
+{
+  "task_uuid": "9f8c2b7e-1a34-4d6f-b0e2-7c5a1d9e4f30"
+}
 ```
+
+## **Create docket and trigger call**
+
+ Creates a docket and immediately triggers the outbound call.
+
+```markdown
+POST /api/v2/dockets/create-and-trigger
+```
+
+```markdown
+auth_token: Bearer <auth_token>
+Content-Type: application/json
+```
+
+```json
+{
+  
+	"agent_id": 280,
+	"to_phone_number": "917504429196", // 12 Digit Phone Number with Country Code
+    "external_id": "12345", // internal CRM id
+     "extra_config": {
+     	"call_context": { // context or attributes for the AI agent to use 
+	      "crm_id": "12345",         // internal CRM id
+	      "name": "",
+	      "email": "",          // if email is present
+		}
+    }
+}
+```
+
+Response:
+
+```json
+{
+  "docket_id": "dkt_a1b2c3d4e5",
+  "created": true,
+  "task_uuid": "9f8c2b7e-1a34-4d6f-b0e2-7c5a1d9e4f30"
+}
+```
+
+## **Bulk Create Dockets**
+
+ Creates multiple dockets in one request (create-only, per-item success/error); does not place calls.
+
+```markdown
+POST /api/v2/dockets/bulk
+```
+
+```markdown
+auth_token: Bearer <auth_token>
+Content-Type: application/json
+```
+
+```json
+
+{
+  "agent_id": 123,
+  "dockets": [
+    {
+      "to_phone_number": "919876543210",
+      "external_id": "cust-4567",
+      "extra_config": {
+        "call_context": {
+          "CAMPAIGN_ID": "camp-001",
+          "customer_name": "Ravi"
+        }
+      }
+    },
+    {
+      "to_phone_number": "918123456789",
+      "external_id": "cust-4568"
+    },
+    {
+      "to_phone_number": "12345"
+    }
+  ]
+}
+```
+
+```http
+curl -X POST 'https://<host>/api/v2/dockets/bulk' \
+  -H 'Content-Type: application/json' \
+  -H 'auth_token: Bearer dfl_your_org_api_key' \
+  -d '{
+    "agent_id": 123,
+    "dockets": [
+      {"to_phone_number": "919876543210", "external_id": "cust-4567"},
+      {"to_phone_number": "918123456789", "external_id": "cust-4568"}
+    ]
+  }'
+```
+
+Response:
+
+```json
+{
+  "total": 3,
+  "succeeded": 2,
+  "failed": 1,
+  "results": [
+    {
+      "success": true,
+      "docket_id": "dkt_a1b2c3d4e5",
+      "status": "IN_PROGRESS",
+      "created": true,
+      "error": null
+    },
+    {
+      "success": true,
+      "docket_id": "dkt_f6g7h8i9j0",
+      "status": "IN_PROGRESS",
+      "created": false,
+      "error": null
+    },
+    {
+      "success": false,
+      "docket_id": null,
+      "status": null,
+      "created": null,
+      "error": "to_phone_number must be 12 digits"
+    }
+  ]
+}
+```
+
+Notes:
+
+- Per-item failures don't fail the whole request — each is reported individually in results (created: false means an existing open docket was reused).
+- If the top-level agent_id resolves to no agent, the whole request fails with 404.
+- The to_phone_number 12-digit check is enforced at the schema level here; an invalid one within a batch item surfaces as a Pydantic 422 for the whole request (not a per-item error), while other errors like agent-access are per-item. So validate numbers client-side before sending.
+
+## Common Failures
+
+| Status | When | Body / Notes |
+| --- | --- | --- |
+| `422` | Any item's `to_phone_number` is not exactly 12 digits, or `dockets` is empty (\`min_length=1\`) | Pydantic validation — fails the whole request before any docket is created |
+| `401` | Missing/invalid `auth_token` | `{"detail": {"message": "User is unauthorised"}}` |
+| `404` | Top-level `agent_id` resolves to no OUTGOING agent | `{"detail": {"message": "No agent found for id <id>"}}` — fails the whole request |
+| `403` | Agent not accessible to your org | `{"detail": {"message": "Agent <name> is not accessible to your account"}}` — fails the whole request |
+| `500` | Unexpected failure at the batch level | `{"detail": "Failed to bulk create dockets"}` |
+| Per-item | A single docket fails during DB creation | Request still returns \`201\`; that item appears in \`results\` with \`success: false\` and an \`error\` string, \`failed\` count incremented |
